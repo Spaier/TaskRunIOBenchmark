@@ -11,7 +11,6 @@ namespace TaskRunIO
     [InProcess]
     public class TaskRunIOBenchmark
     {
-        // Change to full path.
         public static readonly string ImageName = Path.GetFullPath(@"../../../IMG_20180905_220918");
 
         public const string ImageExt = ".jpg";
