@@ -8,17 +8,17 @@ using BenchmarkDotNet.Running;
 
 namespace TaskRunIO
 {
-    //[ClrJob, CoreJob, CoreRtJob, SimpleJob, VeryLongRunJob]
-    //[LongRunJob]
+    [InProcess]
     public class TaskRunIOBenchmark
     {
-        public const string ImageName = @"../../../IMG_20180905_220918";
+        // Change to full path.
+        public static readonly string ImageName = Path.GetFullPath(@"../../../IMG_20180905_220918");
 
         public const string ImageExt = ".jpg";
 
-        public const string ImagePath = ImageName + ImageExt;
+        public static readonly string ImagePath = ImageName + ImageExt;
 
-        public const int Amount = 4;
+        public static int Amount { get; set; } = 2;
 
         private Task GetTask(Func<Task> action) => Task.WhenAll
             (
@@ -67,10 +67,24 @@ namespace TaskRunIO
 
     static class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
-            BenchmarkRunner.Run<TaskRunIOBenchmark>();
-            Console.ReadKey();
+            while (true)
+            {
+                Console.WriteLine("Enter operations amount.");
+                var line = Console.ReadLine();
+                if (int.TryParse(line, out var amount))
+                {
+                    TaskRunIOBenchmark.Amount = amount;
+                    Console.WriteLine(TaskRunIOBenchmark.ImagePath);
+                    BenchmarkRunner.Run<TaskRunIOBenchmark>();
+                    Console.ReadKey();
+                }
+                else
+                {
+                    Console.WriteLine("Invalid Int32 format.");
+                }
+            }
         }
     }
 }
