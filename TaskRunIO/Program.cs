@@ -113,7 +113,6 @@ namespace TaskRunIO
                     TaskRunIOBenchmark.Amount = amount;
                     Console.WriteLine(TaskRunIOBenchmark.ImagePath);
                     BenchmarkRunner.Run<TaskRunIOBenchmark>();
-                    Console.ReadKey();
                 }
                 else
                 {
