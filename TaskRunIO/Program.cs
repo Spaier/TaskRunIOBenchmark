@@ -28,7 +28,7 @@ namespace TaskRunIO
             );
 
         [Benchmark]
-        public Task AsyncAwaitCopyDelete()
+        public Task AsyncBitmapCopyDelete()
         {
             return GetTask(async () =>
             {
@@ -40,7 +40,7 @@ namespace TaskRunIO
         }
 
         [Benchmark]
-        public Task AsyncAwaitFalseCopyDelete()
+        public Task AsyncAwaitFalseBitmapCopyDelete()
         {
             return GetTask(async () =>
             {
@@ -52,7 +52,43 @@ namespace TaskRunIO
         }
 
         [Benchmark]
-        public Task SyncCopyDelete()
+        public Task AsyncAwaitFalseCopyDelete()
+        {
+            return GetTask(async () =>
+            {
+                var name = ImageName + Guid.NewGuid() + ImageExt;
+                var image = new Bitmap(ImagePath);
+                await Task.Run(() => image.Save(name)).ConfigureAwait(false);
+                await Task.Run(() => File.Delete(name)).ConfigureAwait(false);
+            });
+        }
+
+        [Benchmark]
+        public Task AsyncAwaitFalseBitmapCopy()
+        {
+            return GetTask(async () =>
+            {
+                var name = ImageName + Guid.NewGuid() + ImageExt;
+                var image = await Task.Run(() => new Bitmap(ImagePath)).ConfigureAwait(false);
+                await Task.Run(() => image.Save(name)).ConfigureAwait(false);
+                File.Delete(name);
+            });
+        }
+
+        [Benchmark]
+        public Task AsyncAwaitFalseBitmapDelete()
+        {
+            return GetTask(async () =>
+            {
+                var name = ImageName + Guid.NewGuid() + ImageExt;
+                var image = await Task.Run(() => new Bitmap(ImagePath)).ConfigureAwait(false);
+                image.Save(name);
+                await Task.Run(() => File.Delete(name)).ConfigureAwait(false);
+            });
+        }
+
+        [Benchmark]
+        public Task Sync()
         {
             return GetTask(async () =>
             {
